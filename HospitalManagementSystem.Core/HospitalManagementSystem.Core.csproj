@@ -30,11 +30,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.5" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.4.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
     <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.5" />
   </ItemGroup>
 
 </Project>

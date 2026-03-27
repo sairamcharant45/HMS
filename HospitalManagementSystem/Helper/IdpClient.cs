@@ -171,13 +171,13 @@ namespace HospitalManagementSystem.Web.Helper
         public async Task<JObject> GetAccessTokenWithoutUgHub(string code)
         {
             var httpClientHandler = new HttpClientHandler();
-            httpClientHandler.ServerCertificateCustomValidationCallback = (message,
-                cert,
-                chain,
-                sslPolicyErrors) =>
-            {
-                return true;
-            };
+            //httpClientHandler.ServerCertificateCustomValidationCallback = (message,
+            //    cert,
+            //    chain,
+            //    sslPolicyErrors) =>
+            //{
+            //    return true;
+            //};
             var TokenUrl = configuration.GetValue<string>("dtidp:UgPassBaseUrl");
 
             //set client assertion type

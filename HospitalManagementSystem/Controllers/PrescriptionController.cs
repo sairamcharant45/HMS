@@ -16,12 +16,13 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System;
-using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HospitalManagementSystem.Web.Controllers
@@ -796,6 +797,11 @@ namespace HospitalManagementSystem.Web.Controllers
             if (string.IsNullOrEmpty(envelopeId))
             {
                 return BadRequest("Missing envelope ID.");
+            }
+
+            if (!Regex.IsMatch(envelopeId, "^[a-zA-Z0-9-]+$"))
+            {
+                return BadRequest("Invalid envelope ID format.");
             }
 
             var client = new HttpClient();
