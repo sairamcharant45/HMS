@@ -5,7 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+	<PropertyGroup>
+		<!-- Generate the lock file -->
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
+		<!-- Restore the exact packages as listed in the lock file -->
+		<RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
