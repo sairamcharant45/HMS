@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Authentication Error";
+    Layout = null;
+}
+
+<h2>Authentication Error</h2>
+
+@if (ViewBag.error != null)
+{
+    <p><strong>Error:</strong> @ViewBag.error</p>
+}
+
+@if (ViewBag.error_description != null)
+{
+    <p><strong>Description:</strong> @ViewBag.error_description</p>
+}
+
+<a href="/Login">Go back to Login</a>

@@ -1,0 +1,27 @@
+﻿@using Newtonsoft.Json
+@using HospitalManagementSystem.Web.ViewModel
+
+@if (TempData["Alert"] != null)
+{
+    var alertBox = TempData["Alert"];
+
+<script>
+    $(document).ready(function () {
+        let alertObj = @Html.Raw(@alertBox);
+
+        if (alertObj.IsSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: alertObj.Message
+            });
+        } else {
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: alertObj.Message,
+                });
+        }
+    });
+</script>
+}

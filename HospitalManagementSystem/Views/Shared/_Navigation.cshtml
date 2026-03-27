@@ -1,0 +1,165 @@
+﻿@* @inject StackExchange.Redis.IConnectionMultiplexer Redis *@
+@using System.Security.Claims
+@{
+    var userRole = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Guest";
+    var userName = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "";
+    var userSuid = User?.Claims.FirstOrDefault(c => c.Type == "Suid")?.Value ?? "";
+
+    // var db = Redis.GetDatabase();
+    //var st = $"{userSuid}-UserImage";
+    var base64Image = "";
+    // var base64Image = db.StringGet(st);
+}
+
+<style>
+    .round-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+
+
+<div class="main-sidebar sidebar-style-2">
+    <aside id="sidebar-wrapper">
+        <div class="sidebar-brand border">
+            <div class="profile-sidebar">
+                <div class="profile-userpic" style="padding-left:20px;">
+                    @if (!string.IsNullOrEmpty(base64Image))
+                    {
+                        <img src="data:image/jpeg;base64,@base64Image" class="round-image" alt="User Profile" style="margin-right:10px;" />
+                    }
+                    else
+                    {
+                        <img src="~/assets/img/Administrator.png" class="img-responsive" alt="" style="height:70px;padding:10px;" />
+                    }
+
+                    <span class="indicator" style="display: inline-block; width: 10px; height: 10px; background-color: lightgreen; border-radius: 50%;"></span>
+                    <b>@userRole.ToUpper()</b>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="dropdown">
+                <a class="nav-lin DashboardMenu" asp-controller="Dashboard" asp-action="Index">
+                    <i class="fa fa-dashboard"></i><span>DashBoard</span>
+                </a>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown DoctorMenu">
+                        <i class="fa fa-user-md"></i><span>Doctor</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link AddDoctorMenu" asp-controller="Doctor" asp-action="AddDoctor">Add Doctor</a></li>
+                        <li><a class="nav-link ListOfDoctorsMenu" asp-controller="Doctor" asp-action="ListOfDoctors">List Of Doctors</a></li>
+                    </ul>
+                </li>
+            }
+            @if (User.IsInRole("Doctor"))
+            {
+                <li class="dropdown">
+                    <a class="nav-lin ProfileMenu" asp-controller="Profile" asp-action="UpdateProfileDetails">
+                        <i class="fa fa-user"></i><span>Profile</span>
+                    </a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown PatientMenu">
+                        <i class="fa fa-user-o"></i><span>Patients</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link AddPatientMenu" asp-controller="Patient" asp-action="AddPatient">Add Patient</a></li>
+                        <li><a class="nav-link ListPatientmenu" asp-controller="Patient" asp-action="ListOfPatients">List Of Patients</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="nav-lin AppointmentsMenu" asp-controller="Appointments" asp-action="ListOfAppointments">
+                        <i class="fa fa-dashboard"></i><span>Appointments</span>
+                    </a>
+                    @* <a href="#" class="menu-toggle nav-link has-dropdown AppointmentsMenu">
+                        <i class="fa fa-user-md"></i><span>Appointments</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link ListOfAppointmentsMenu" asp-controller="Appointments" asp-action="ListOfAppointments">List Of Appointment</a></li>
+                    </ul> *@
+                </li>
+            }
+
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown PatientMenu">
+                        <i class="fa fa-user-o"></i><span>Patients</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link AddPatientMenu" asp-controller="Patient" asp-action="AddPatient">Add Patient</a></li>
+                        <li><a class="nav-link ListPatientmenu" asp-controller="Patient" asp-action="ListOfPatients">List Of Patients</a></li>
+                    </ul>
+                </li>
+            }
+
+            @if (User.IsInRole("Doctor"))
+            {
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown PrescrptionMenu">
+                        <i data-feather="briefcase"></i><span>Prescription</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link AddPrescriptionMenu" asp-controller="Prescription" asp-action="AddPrescription">Add Prescription</a></li>
+                        <li><a class="nav-link ListPrescriptionMenu" asp-controller="Prescription" asp-action="ListOfPrescriptions">List Of Prescription</a></li>
+                    </ul>
+                </li>
+            }
+
+            @if (User.IsInRole("Patient"))
+            {
+                <li class="dropdown">
+                    <a class="nav-lin ProfileMenu" asp-controller="Profile" asp-action="UpdateProfileDetails">
+                        <i class="fa fa-user"></i><span>Profile</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown DoctorMenu">
+                        <i class="fa fa-user-md"></i><span>Doctors</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link ListOfDoctorsMenu" asp-controller="Doctor" asp-action="ListOfDoctorsForPatients">List Of Doctors</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown PrescrptionMenu">
+                        <i data-feather="briefcase"></i><span>Prescription</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link ListPrescriptionMenu" asp-controller="Prescription" asp-action="ListOfPrescriptionsOfPatients">List Of Prescriptions</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="menu-toggle nav-link has-dropdown AppointmentsMenu">
+                        <i class="fa fa-calendar-check"></i><span>Appointments</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link RequestAppointmentsMenu" asp-controller="Appointments" asp-action="RequestAppointment">Request Appointment</a></li>
+                    </ul>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link MyAppointmentsMenu" asp-controller="Appointments" asp-action="ViewAppointmentsByPatient">My Appointments</a></li>
+                    </ul>
+                </li>
+            }
+
+
+        
+
+            <li class="dropdown">
+                <a class="nav-link" asp-controller="Logout" asp-action="Index">
+                    <i class="fa fa-power-off"></i><span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+</div>

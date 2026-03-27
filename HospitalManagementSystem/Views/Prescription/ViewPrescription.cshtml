@@ -1,0 +1,367 @@
+﻿@using System.Security.Claims
+@model HospitalManagementSystem.Web.ViewModel.Prescription.PrescriptionViewModel
+
+@{
+    ViewData["Title"] = "Prescription";
+    var isExternalLogin = User.Claims.FirstOrDefault(c => c.Type == "ExternalLogin")?.Value;
+    var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+    Layout = null;
+}
+
+
+<style>
+    #doc2 {
+        font-family: 'Poppins', sans-serif;
+        background-color: #fff;
+        margin: 20px auto;
+        max-width: 900px;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #3498db;
+        text-align: center;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 15px;
+    }
+
+    .section-title {
+        /* font-size: 18px; */
+        font-weight: 500;
+        color: #3498db;
+        margin-bottom: 10px;
+    }
+
+    .detail {
+        /* font-size: 16px; */
+        margin-bottom: 8px;
+    }
+
+    .medicine-detail {
+        display: flex;
+        align-items: center;
+        /* font-size: 16px; */
+        margin-bottom: 5px;
+    }
+
+    .medicine-name {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .medicine-timing {
+        font-weight: 400;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #777;
+    }
+
+    .header h4 {
+        margin: 5px 0; /* Reduce the space between Address, Contact, and Date */
+    }
+
+    .content, .header
+    {
+        font-size: 20px;
+    }
+
+
+    .center-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        opacity: 0.6;
+    }
+
+    .loader {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: spin 0.8s infinite linear;
+    }
+
+    .loadertext {
+        width: 200px !important;
+        padding-top: 30px;
+        position: absolute;
+        top: 57%;
+        left: 43%;
+        transform: translate(-50%, -50%);
+        color: white;
+        white-space: nowrap;
+    }
+
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+</style>
+
+<div class="spinner" style="display:none">
+    <div class="center-div">
+        <div class="inner-div">
+            <div class="loader"></div>
+        </div>
+    </div>
+    <div class="loadertext" id="loadingText">Please check your @ViewBag.cleintName Mobile Application for entering pin...</div>
+</div>
+
+<div id="doc2">
+    <div class="header">
+        <h2 style="font-weight:bold">HOSPITAL MANAGEMENT SYSTEM</h2>
+        <h4>Address: Mindspace, Hyderabad</h4>
+        <h4>Contact: 879087XXXX</h4>
+        <h4>Date: @(Model.PrescriptionAddDate.ToShortDateString())</h4>
+    </div>
+    <br />
+    <div class="content">
+        <div class="profile-info">
+            <div class="section-title" style="font-weight:bold">DOCTOR PROFILE</div>
+            <div class="detail"><strong>Name:</strong> @Model.DoctorName</div>
+            <div class="detail"><strong>Specialization:</strong> @Model.DoctorSpecialization</div>
+        </div>
+        <br />
+        <div class="profile-info">
+            <div class="section-title" style="font-weight:bold">PATIENT PROFILE</div>
+            <div class="detail"><strong>Name:</strong> @Model.PatientName</div>
+            @if (Model.PatientAge != null)
+            {
+                <div class="detail"><strong>Age:</strong> @Model.PatientAge</div>
+            }
+            @if (Model.PatientGender != null)
+            {
+                <div class="detail"><strong>Gender:</strong> @Model.PatientGender</div>
+            }
+            @if (Model.PatientEmailAddress != null)
+            {
+                <div class="detail"><strong>Email:</strong> @Model.PatientEmailAddress</div>
+            }
+            @if (Model.PatientPhoneNo != null)
+            {
+                <div class="detail"><strong>Phone No:</strong> @Model.PatientPhoneNo</div>
+            }
+        </div>
+        <br />
+        <div class="medical-tests">
+            <div class="section-title" style="font-weight:bold">MEDICAL TESTS</div>
+            @if (!string.IsNullOrEmpty(Model.MedicalTest1))
+            {
+                <div class="detail">@Model.MedicalTest1</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.MedicalTest2))
+            {
+                <div class="detail">@Model.MedicalTest2</div>
+            }
+        </div>
+        <br />
+        <div class="prescription-info">
+            <div class="section-title" style="font-weight:bold">PRESCRIPTION</div>
+            @for (int i = 1; i <= 4; i++)
+            {
+                var medicine = (string)Model.GetType().GetProperty($"Medicine{i}")?.GetValue(Model);
+                var morning = (bool?)Model.GetType().GetProperty($"Morning{i}")?.GetValue(Model) ?? false;
+                var afternoon = (bool?)Model.GetType().GetProperty($"Afternoon{i}")?.GetValue(Model) ?? false;
+                var evening = (bool?)Model.GetType().GetProperty($"Evening{i}")?.GetValue(Model) ?? false;
+
+                if (!string.IsNullOrEmpty(medicine))
+                {
+                    <div class="medicine-detail">
+                        <div class="medicine-name"><strong>@i.</strong> @medicine</div>
+                        <div class="medicine-timing">
+                            @if (morning)
+                            {
+                                <span>Morning</span>
+                            }
+                            @if (afternoon)
+                            {
+                                @if(morning)
+                                {
+                                    <span> - Afternoon</span>
+                                }
+                                else
+                                {
+                                    <span>Afternoon</span>
+                                }
+                            }
+                            @if (evening)
+                            {
+                                @if (morning || afternoon)
+                                {
+                                    <span> - Evening</span>
+                                }
+                                else
+                                {
+                                    <span>Evening</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <br />
+        <div class="profile-info">
+            @* <div class="section-title" style="font-weight:bold">CHECK UP AFTER</div> *@
+            <div class="detail"><strong>Check Up After:</strong> @(Model.CheckUpAfterDays + " Days")</div>
+        </div>
+    </div>
+    <br />
+    <br />
+    @if (isExternalLogin == "false")
+    {
+        <div class="footer">
+            @*<a href="@Url.Action("GeneratePdf", new {id = Model.Id})" class="fa fa-book" style="font-size: 19px; color: black">Sign & Download</a>*@
+            
+            @if(userRole == "Patient")
+            {
+                <a asp-action="ListOfPrescriptionsOfPatients" style="font-size: 19px; color: #3498db; margin-right: 47px; ">Back to List</a>
+            }
+            else
+            {
+                <a href="#" id="downloadLink" class="fa fa-book" style="font-size: 19px; color: #3498db; margin-right: 47px;">Sign & Download</a>
+                <br/>
+@*                 <br />
+                <a href="#" onclick="sendPdf(@Model.Id)" class="fa fa-book" style="font-size: 19px; color: #3498db; margin-right: 47px;">Sign With UgPass App</a>
+                <br /> *@
+                <br />
+                <a asp-action="ListOfPrescriptions" style="font-size: 19px; color: #3498db; margin-right: 47px; ">Back to List</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="footer">
+            @if (userRole == "Patient")
+            {
+                <a asp-action="ListOfPrescriptionsOfPatients" style="font-size: 19px; color: #3498db; margin-right: 47px; ">Back to List</a>
+            }
+            else
+            {
+                <a asp-action="ListOfPrescriptions" style="font-size: 19px; color: #3498db; margin-right: 47px; ">Back to List</a>
+            }
+        </div>
+    }
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(document).ajaxSend(function (event, xhr, options) {
+            $('.spinner').css('display', 'block');
+            $("#loadingText").show();
+
+        }).ajaxComplete(function (event, xhr, options) {
+            $('.spinner').css('display', 'none');
+            $("#loadingText").hide();
+
+        }).ajaxError(function (event, jqxhr, settings, exception) {
+            $('.spinner').css('display', 'none');
+            $("#loadingText").hide();
+        });
+
+        function base64ToBlob(base64, mime) {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: mime });
+        }
+
+    function sendPdf(id) {
+        $.ajax({
+            url: '@Url.Action("SendPDF", "Prescription")',
+            type: 'POST',
+            data: { id: id },
+            success: function (response) {
+                if (response.status === "Success") {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    alert("Failed to send PDF: " + (response.message || "Unknown error."));
+                    location.reload(); // reloads the same page
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+                alert("Something went wrong while sending the PDF.");
+                location.reload(); // fallback reload on error
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $(document).on('click', '#downloadLink', function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("GeneratePDF", "Prescription", new { id = Model.Id })',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === "Success" && response.fileContent) {
+                        var pdfBytes = atob(response.fileContent); // Decode Base64
+                        var byteArray = new Uint8Array(pdfBytes.length);
+                        for (var i = 0; i < pdfBytes.length; i++) {
+                            byteArray[i] = pdfBytes.charCodeAt(i);
+                        }
+                        var pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
+                        var pdfURL = URL.createObjectURL(pdfBlob);
+
+                        var a = document.createElement('a');
+                        a.href = pdfURL;
+                        a.download = 'Prescription.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(pdfURL);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message || 'Something went wrong, please try again later.'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to generate PDF: ' + error
+                    });
+                }
+            });
+        });
+    });
+
+
+    </script>

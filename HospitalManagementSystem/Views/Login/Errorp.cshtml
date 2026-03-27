@@ -1,0 +1,93 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var name = Configuration["ProjectName"];
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/assets/appcss/ErrorPage.css" asp-append-version="true" />
+    <title>Access Denied</title>
+    <link rel="icon" type="image/x-icon" href="~/assets/@name/fav04.png" />
+    <!-- stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet"
+          type="text/css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" integrity="sha512-fRVSQp1g2M/EqDBL+UFSams+aw2qk12Pl/REApotuUVK1qEXERk3nrCFChouag/PdDsPk387HJuetJ1HBx8qAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1 class="text-danger" style="display:none">
+    </h1>
+    <h5 class="text-danger" style="display:none"></h5>
+
+    <section class="myform-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-area" id="errorPage" style="text-align:center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="1024 1024 180 60">
+                            <g xmlns="http://www.w3.org/2000/svg" id="Group_96923" data-name="Group 96923" transform="translate(500 520)">
+                                <path id="Path_199480" data-name="Path 199480" d="M651.775,581.84l-88.011,15.783a8.532,8.532,0,0,1-9.876-6.873l-20.621-115a8.531,8.531,0,0,1,6.871-9.876l24.295-4.358" transform="translate(0 6.356)" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <path id="Path_199481" data-name="Path 199481" d="M559.311,463.869l49.13-8.81a8.535,8.535,0,0,1,9.878,6.873l2.093,11.674" transform="translate(19.709 1.392)" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <path id="Path_199482" data-name="Path 199482" d="M561.293,464.256h73.563a8.533,8.533,0,0,1,8.509,8.508l-.808,46.744" transform="translate(21.201 8.416)" fill="#fff" stroke="#030504" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <path id="Path_199483" data-name="Path 199483" d="M654.811,571.079v21.4a8.532,8.532,0,0,1-8.509,8.507H554.6a8.532,8.532,0,0,1-8.507-8.507V472.764a8.532,8.532,0,0,1,8.507-8.508h1.315" transform="translate(9.755 8.416)" fill="#fff" stroke="#030504" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_348" data-name="Line 348" x2="55.416" transform="translate(570.207 510.852)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_349" data-name="Line 349" x2="9.517" transform="translate(629.839 510.852)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_350" data-name="Line 350" x2="57.223" transform="translate(568.4 529.554)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_351" data-name="Line 351" x2="0.91" transform="translate(629.839 529.043)" fill="none" stroke="#3a3c3e" stroke-miterlimit="10" stroke-width="1" />
+                                <line id="Line_352" data-name="Line 352" x2="28.672" transform="translate(582.495 548.077)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_353" data-name="Line 353" x2="32.5" transform="translate(570.207 567.111)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <line id="Line_354" data-name="Line 354" x2="28.792" transform="translate(581.169 585.905)" fill="none" stroke="#3a3c3e" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" />
+                                <rect id="Rectangle_1248" data-name="Rectangle 1248" width="6.613" height="5.18" rx="0.653" transform="translate(588.451 486.517)" fill="#3a3c3e" />
+                                <rect id="Rectangle_1249" data-name="Rectangle 1249" width="6.613" height="5.18" rx="0.653" transform="translate(603.215 486.517)" fill="#3a3c3e" />
+                                <rect id="Rectangle_1250" data-name="Rectangle 1250" width="6.613" height="5.18" rx="0.653" transform="translate(617.98 486.517)" fill="#3a3c3e" />
+                                <rect id="Rectangle_1251" data-name="Rectangle 1251" width="6.613" height="5.18" rx="0.653" transform="translate(632.744 486.517)" fill="#3a3c3e" />
+                                <g id="Group_96916" data-name="Group 96916" transform="translate(611.537 521.458)">
+                                    <path id="Path_199484" data-name="Path 199484" d="M577.862,524.375c.11-16.794,13.685-31.392,29.974-32.236,18.214-.943,32.879,11.141,35,28.767a32.493,32.493,0,0,1-5.693,22.609c-.485.724-1.879,1.4-.752,2.5.922.908,1.506,2.429,3.385,1.962,2.053-.514,3.681.452,5.12,1.9,6.828,6.871,13.7,13.7,20.526,20.57,3.224,3.246,3.134,5.7-.2,9.038s-5.643,3.4-9.013.051c-6.733-6.68-13.424-13.4-20.15-20.088-1.641-1.63-2.924-3.327-2.238-5.855.458-1.677-1.188-2.163-2-3.036-1.085-1.166-1.762.266-2.494.749-10.847,7.106-22.181,8.042-33.785,2.254A32.129,32.129,0,0,1,577.862,524.375Zm72.789,34.932-.6-.607-.607-.6-.608-.6-.608-.6-.6-.606-.606-.607-.756-.834-1.064-.985-.6-.606-.612-.6-.6-.612c-.17-.538-.815-.931-1.041-.652-.517.64.252.945.677,1.29l.6.61c.228.212.458.422.685.635a2.176,2.176,0,0,0,.221.219l1.11,1.108,1.02,1.059.61.621.6.6.612.612.585.587.72.673.17.168.656.7c.3.294.554.9,1.045.426.324-.317-.075-.608-.394-.783Zm3.634,3.639-.6-.613-.615-.6c-.146-.366-.345-.7-.787-.429-.082.049.054.454.091.694q.526.523,1.05,1.047l.152.149.661.713.908.9.6.6q.352.329.7.654l.172.172,1.131,1.134c.342.354.684.71,1.024,1.064l.612.612.594.6c.233.217.466.437.7.654.24.04.642.182.693.1.279-.438-.054-.64-.419-.789l-.606-.608-.607-.6-.606-.606-.754-.834-1.064-.987-.6-.6-.6-.606-.607-.606-.61-.606Zm8.489,8.475c-.147-.366-.356-.689-.791-.424-.081.049.051.452.086.691.375.415.563,1.4,1.346.731C663.726,572.155,663.279,571.587,662.774,571.421Zm-52.238-19.2A27.607,27.607,0,1,0,582.813,524.9,27.567,27.567,0,0,0,610.536,552.216Z" transform="translate(-577.862 -492.088)" fill="#161a19" />
+                                    <path id="Path_199485" data-name="Path 199485" d="M599.166,497.62a22.489,22.489,0,0,1,19.585,12.637c.552,1.046,1.73,2.4-.123,3.322-1.69.838-2-.813-2.507-1.781-4.009-7.6-10.324-11.231-18.873-11.075-.5.01-1.006.039-1.508.074-.908.061-1.63-.186-1.749-1.2-.131-1.143.606-1.66,1.588-1.79S597.589,497.692,599.166,497.62Z" transform="translate(-565.729 -487.922)" fill="#161a19" />
+                                    <path id="Path_199486" data-name="Path 199486" d="M607.7,510.486c-.21-1.325.266-2.452,1.362-2.382,2.226.144,1.53,2.193,1.758,3.525.191,1.117.01,2.521-1.5,2.34C607.092,513.7,608.27,511.535,607.7,510.486Z" transform="translate(-555.432 -480.032)" fill="#161a19" />
+                                </g>
+                                <path id="Path_199487" data-name="Path 199487" d="M562,481.921a5.252,5.252,0,0,1-3.236-2.587q-3.936-7.515-7.841-15.047c-.2-.379-.384-.782.116-1.06.556-.308.775.121.98.517q3.82,7.331,7.636,14.665a4.248,4.248,0,1,0,7.707-3.572q-4.851-9.442-9.79-18.837a3.26,3.26,0,0,0-5.774,3.027q3.565,6.934,7.2,13.836a2.322,2.322,0,0,0,3.127,1.224,2.3,2.3,0,0,0,.885-3.283c-.482-1-1.017-1.967-1.527-2.948q-1.5-2.882-3-5.763c-.208-.4-.426-.843.109-1.12s.77.133.982.543q2.211,4.265,4.431,8.521a3.978,3.978,0,0,1,.445,2.85,3.286,3.286,0,0,1-5.4,1.874,4.668,4.668,0,0,1-1.185-1.42q-3.589-6.8-7.108-13.638a4.485,4.485,0,0,1,1.8-6.09,4.564,4.564,0,0,1,6.149,1.876c.224.4.424.81.636,1.215q4.5,8.648,8.989,17.3a5.49,5.49,0,0,1-5.425,8.107A6.906,6.906,0,0,1,562,481.921Z" transform="translate(12.867)" />
+                            </g>
+                        </svg>
+
+                        @if (ViewBag.error != null)
+                        {
+                            <p class="error">
+                                @ViewBag.error
+                            </p>
+                        }
+                        @if (ViewBag.error_description != null)
+                        {
+                            <p class="error_desc">
+                                @ViewBag.error_description
+                            </p>
+                        }
+
+
+                        <div class="myform-button" style="margin-top: 30px">
+                            <div class="d-flex justify-content-center">
+                                <a class="myform-btn" asp-controller="Login" asp-action="Index">Go back to Login</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    @* <div class="row footer">
+
+                        <img id="logo" src="~/assets/@name/PoweredBy.png" />
+
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+</html>

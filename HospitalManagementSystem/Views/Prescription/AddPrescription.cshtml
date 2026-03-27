@@ -1,0 +1,440 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Prescription.AddPrescriptionViewModel
+
+@{
+    ViewData["Title"] = "Add Prescription";
+}
+
+<style>
+
+    /* Style adjustments for labels and inputs */
+    .col-form-label {
+        padding-top: 0; /* Reduced top padding */
+        padding-bottom: 0; /* Reduced bottom padding */
+        margin-bottom: 0; /* Remove default bottom margin */
+        line-height: 2; /* Adjust line height for better alignment */
+    }
+
+    .form-control,
+    .form-select {
+        height: 30px;
+        border-radius: 8px;
+    }
+
+    /* Style for required field indicators */
+    .required-field::after {
+        content: " *";
+        color: black;
+    }
+
+    .col-form-label {
+        /* color: black; */
+        font-weight:bold;
+        text-align: end;
+    }
+
+    @@media (max-width: 1024px)
+    {
+        .col-form-label {
+            text-align: start;
+        }
+    }
+
+
+    .form-control {
+        /* border-color: black; */
+        border-radius: 2px;
+    }
+
+    .form-select {
+        border-radius: 2px;
+    }
+
+    .row {
+        padding: 2px;
+    }
+
+
+
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-button {
+        margin: 5px;
+    }
+
+    .center-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+
+    .loader1 {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+
+    .inner-div {
+        border-radius: 15px;
+        margin: auto;
+        padding: 2%;
+        width: 150px;
+    }
+
+    .loadertext {
+        width: 100%;
+        max-width: 250px;
+        padding-top: 30px;
+        position: absolute;
+        top: 54%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        color: white;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    @@media screen and (max-width: 600px) {
+        .loadertext {
+            font-size: 14px;
+            max-width: 80%;
+            white-space: normal;
+        }
+    }
+
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .col-form-label {
+            text-align: start;
+        }
+    }
+
+    ::placeholder {
+        color: lightgrey !important;
+    }
+</style>
+
+@{
+    await Html.RenderPartialAsync("_AlertBox");
+}
+
+<!-- Breadcrumb Section -->
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Prescription</li>
+                <li class="breadcrumb-item active" aria-current="page">Add Prescription</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="spinner" style="display:none">
+    <div class="center-div">
+        <div class="inner-div">
+            <div class="loader1"></div>
+        </div>
+    </div>
+    <div class="loadertext" id="loadingText">Please wait.. Fetching @ViewBag.cleintName subscriber profile details.</div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 style="padding-bottom:15px;">Add Prescription</h2>
+
+                <form asp-action="AddPrescription" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <label asp-for="Prescription.PatientId" class="col-sm-2 col-form-label fw-bold">Patient Name</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Prescription.PatientId, new SelectList(Model.PatientList, "PatientId", "PatientName"), "Select Patient", new { @id = "patientDropdown", @class = "form-select form-select-lg" })
+                            @Html.ValidationMessageFor(model => model.Prescription.PatientId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medical Tests</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.MedicalTest1" class="form-control mb-2" placeholder="Test 1" />
+                            <input asp-for="Prescription.MedicalTest2" class="form-control" placeholder="Test 2" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 1</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.Medicine1" class="form-control mb-2" placeholder="Medicine 1" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Morning1" id="Morning1" value="true" />
+                                <label class="form-check-label" for="Morning1">Morning</label>
+                                <input type="hidden" name="Prescription.Morning1" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Afternoon1" id="Afternoon1" value="true" />
+                                <label class="form-check-label" for="Afternoon1">Afternoon</label>
+                                <input type="hidden" name="Prescription.Afternoon1" value="false" />
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Evening1" id="Evening1" value="true" />
+                                <label class="form-check-label" for="Evening1">Evening</label>
+                                <input type="hidden" name="Prescription.Evening1" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 2</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.Medicine2" class="form-control mb-2" placeholder="Medicine 2" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Morning2" id="Morning2" value="true" />
+                                <label class="form-check-label" for="Morning2">Morning</label>
+                                <input type="hidden" name="Prescription.Morning2" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Afternoon2" id="Afternoon2" value="true" />
+                                <label class="form-check-label" for="Afternoon2">Afternoon</label>
+                                <input type="hidden" name="Prescription.Afternoon2" value="false" />
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Evening2" id="Evening2" value="true" />
+                                <label class="form-check-label" for="Evening2">Evening</label>
+                                <input type="hidden" name="Prescription.Evening2" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 3</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.Medicine3" class="form-control mb-2" placeholder="Medicine 3" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Morning3" id="Morning3" value="true" />
+                                <label class="form-check-label" for="Morning3">Morning</label>
+                                <input type="hidden" name="Prescription.Morning3" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Afternoon3" id="Afternoon3" value="true" />
+                                <label class="form-check-label" for="Afternoon3">Afternoon</label>
+                                <input type="hidden" name="Prescription.Afternoon3" value="false" />
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Evening3" id="Evening3" value="true" />
+                                <label class="form-check-label" for="Evening3">Evening</label>
+                                <input type="hidden" name="Prescription.Evening3" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 4</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.Medicine4" class="form-control mb-2" placeholder="Medicine 4" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Morning4" id="Morning4" value="true" />
+                                <label class="form-check-label" for="Morning4">Morning</label>
+                                <input type="hidden" name="Prescription.Morning4" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Afternoon4" id="Afternoon4" value="true" />
+                                <label class="form-check-label" for="Afternoon4">Afternoon</label>
+                                <input type="hidden" name="Prescription.Afternoon4" value="false" />
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Prescription.Evening4" id="Evening4" value="true" />
+                                <label class="form-check-label" for="Evening4">Evening</label>
+                                <input type="hidden" name="Prescription.Evening4" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="Prescription.CheckUpAfterDays" class="col-sm-2 col-form-label fw-bold">Checkup After Days</label>
+                        <div class="col-sm-10">
+                            <input asp-for="Prescription.CheckUpAfterDays" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn" style="background-color:#30a5ff;color:white; margin-right:10px;">Create</button>
+                        <a asp-action="ListOfPrescriptions" class="btn" style="background-color:lightgray;color:black">Go to Prescriptions List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+    <!-- Custom styles for Select2 -->
+    <style>
+        /* Custom style for Select2 dropdown */
+        .select2-container--default .select2-selection--single {
+            height: 50px; /* Adjust height as needed */
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 50px; /* Align text vertically */
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 50px; /* Adjust arrow height */
+            }
+
+        .select2-container {
+            width: 100% !important; /* Make dropdown full width */
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".PrescrptionMenu").click();
+            $(".AddPrescriptionMenu").addClass("active");
+
+            $('#patientDropdown').select2({
+                placeholder: "Select a Patient",
+                allowClear: true
+            });
+
+            function toggleTimeCheckboxes(medicineInput, morningCheckbox, afternoonCheckbox, eveningCheckbox) {
+                if (medicineInput.val().trim() !== '') {
+                    morningCheckbox.prop('disabled', false);
+                    afternoonCheckbox.prop('disabled', false);
+                    eveningCheckbox.prop('disabled', false);
+                } else {
+                    morningCheckbox.prop('checked', false).prop('disabled', true);
+                    afternoonCheckbox.prop('checked', false).prop('disabled', true);
+                    eveningCheckbox.prop('checked', false).prop('disabled', true);
+                }
+            }
+
+            function setupMedicine(medicineNumber) {
+                var medicineInput = $('#Prescription_Medicine' + medicineNumber);
+                var morningCheckbox = $('#Morning' + medicineNumber);
+                var afternoonCheckbox = $('#Afternoon' + medicineNumber);
+                var eveningCheckbox = $('#Evening' + medicineNumber);
+
+                toggleTimeCheckboxes(medicineInput, morningCheckbox, afternoonCheckbox, eveningCheckbox);
+
+                medicineInput.keyup(function () {
+                    toggleTimeCheckboxes(medicineInput, morningCheckbox, afternoonCheckbox, eveningCheckbox);
+                });
+            }
+
+            setupMedicine(1);
+            setupMedicine(2);
+            setupMedicine(3);
+            setupMedicine(4);
+
+            $('form').submit(function (e) {
+                const missingTimes = [];
+                let hasMedicine = false;
+                let hasTest = false;
+
+                [1, 2, 3, 4].forEach(num => {
+                    const medicine = $('#Prescription_Medicine' + num).val().trim();
+                    const hasTime = $('#Morning' + num).is(':checked') ||
+                        $('#Afternoon' + num).is(':checked') ||
+                        $('#Evening' + num).is(':checked');
+
+                    if (medicine) {
+                        hasMedicine = true;
+                        if (!hasTime) {
+                            missingTimes.push(`Medicine ${num}`);
+                        }
+                    }
+                });
+
+                if ($('#Prescription_MedicalTest1').val().trim() !== '' || $('#Prescription_MedicalTest2').val().trim() !== '') {
+                    hasTest = true;
+                }
+
+                if (!hasMedicine && !hasTest) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Prescription Incomplete',
+                        text: 'Please add at least one medicine or one medical test before submitting.',
+                        icon: 'warning',
+                        confirmButtonColor: '#30a5ff'
+                    });
+                    return;
+                }
+
+                if (missingTimes.length > 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Missing Time Selection',
+                        html: `Please select at least one time for:<br><strong>${missingTimes.join('<br>')}</strong>`,
+                        icon: 'warning',
+                        confirmButtonColor: '#30a5ff'
+                    });
+                }
+            });
+
+        });
+    </script>
+
+}

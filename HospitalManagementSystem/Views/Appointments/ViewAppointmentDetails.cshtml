@@ -1,0 +1,148 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Appointments.AppointmentViewModel
+
+<style>
+    .col-form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        height: 30px;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        pointer-events: none;
+    }
+
+    .btn-submit {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+</style>
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Appointments</li>
+                <li class="breadcrumb-item active" aria-current="page">View Appointment Details</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="mb-3">Appointment Details</h2>
+                    <form class="row">
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label">Patient Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" value="@Model.Name" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label">Health Issue</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" value="@Model.Problem" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label">Appointment Date</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" value="@Model.AppointmentDate" readonly />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label">Status</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" value="@Model.Status" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="padding-top:20px;">
+                            @if (Model.Status == "PENDING")
+                            {
+                                <button type="button" class="btn update-status" style="background-color:#30a5ff"  data-status="APPROVED">Accept</button>
+                                <button type="button" class="btn btn-danger update-status" data-status="REJECTED">Reject</button>
+                            }
+                            else if (Model.Status == "APPROVED")
+                            {
+                                <button type="button" class="btn update-status" style="background-color:#30a5ff;color:white" data-status="COMPLETED">Complete</button>
+                            }
+                     
+
+                            <a asp-action="ListOfAppointments" class="btn" style="background-color:lightgray;color:black">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $(".update-status").click(function () {
+        var newStatus = $(this).data("status");
+        var appointmentId = @Model.Id;
+
+        $.ajax({
+            url: '@Url.Action("UpdateAppointmentStatus", "Appointments")',
+            type: 'POST',
+            data: { id: appointmentId, status: newStatus },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Status updated successfully!',
+                        icon: 'success'
+                    }).then(() => {
+                        location.reload(); // Reload page to reflect changes
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Failed!',
+                        text: 'Failed to update status.',
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while updating status.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+});
+
+</script>

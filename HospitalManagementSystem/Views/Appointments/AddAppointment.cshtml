@@ -1,0 +1,244 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Appointments.AddAppointmentViewModel
+<style>
+    .col-form-label {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        line-height: 2;
+        font-weight: bold;
+    }
+
+    .form-control,
+    .form-select {
+        height: 30px;
+        border-radius: 8px;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: black;
+    }
+
+    .row {
+        padding: 2px;
+    }
+
+    .btn-submit {
+        background-color: #30a5ff;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+
+    .btn-cancel {
+        background-color: gray;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+</style>
+
+@{
+    await Html.RenderPartialAsync("_AlertBox");
+}
+
+<style>
+
+    /* Style adjustments for labels and inputs */
+    .col-form-label {
+        padding-top: 0; /* Reduced top padding */
+        padding-bottom: 0; /* Reduced bottom padding */
+        margin-bottom: 0; /* Remove default bottom margin */
+        line-height: 2; /* Adjust line height for better alignment */
+    }
+
+    .form-control,
+    .form-select {
+        height: 35px;
+        border-radius: 8px;
+    }
+
+    /* Style for required field indicators */
+    .required-field::after {
+        content: " *";
+        color: black;
+    }
+
+    .col-form-label {
+        /* color: black; */
+    }
+
+
+
+    .form-control {
+        /* border-color: black; */
+        border-radius: 2px;
+        border: 1px solid #ccc;
+    }
+
+    .form-select {
+        border-radius: 2px;
+    }
+
+    .row {
+        padding: 2px;
+    }
+
+
+
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-button {
+        margin: 5px;
+    }
+
+    .center-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+
+    .loader1 {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+
+    .inner-div {
+        border-radius: 15px;
+        margin: auto;
+        padding: 2%;
+        width: 150px;
+    }
+
+    .loadertext {
+        width: 100%;
+        max-width: 250px;
+        padding-top: 30px;
+        position: absolute;
+        top: 54%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        color: white;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    @@media screen and (max-width: 600px) {
+        .loadertext {
+            font-size: 14px;
+            max-width: 80%;
+            white-space: normal;
+        }
+    }
+
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Appointments</li>
+                <li class="breadcrumb-item active" aria-current="page">Add Appointment</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 style="padding-bottom:15px;">Add Appointment</h2>
+                    <form class="row" asp-action="AddAppointment" method="post">
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label required-field">Patient Name</label>
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(model => model.Appointment.PatientId,
+                                             new SelectList(Model.PatientData, "PatientId", "PatientName"),
+                                             "Select Patient",
+                                             new { @id = "patientDropdown", @class = "form-select form-select-lg", style = "width: 100%;border-color:#ccc;background-color:#fdfdff;padding-left:10px;",required="required" })
+                                    @Html.ValidationMessageFor(model => model.Appointment.PatientId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label required-field">Health Issue</label>
+                                <div class="col-sm-8">
+                                    <input asp-for="Appointment.Problem" type="text" class="form-control" required />
+                                    @Html.ValidationMessageFor(model => model.Appointment.Problem, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label required-field">Appointment Date</label>
+                                <div class="col-sm-8">
+                                <input asp-for="Appointment.AppointmentDate" type="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")"  />
+                                    @Html.ValidationMessageFor(model => model.Appointment.AppointmentDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="padding-top:20px;">
+                            <button type="submit" class="btn" style="background-color:#30a5ff;color:white">Add</button>
+                            <a asp-action="ListOfAppointments" class="btn" style="background-color:lightgray;color:black">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".AppointmentsMenu").addClass("active");
+        $(".AppointmentsMenu").click();
+        // $(".ListOfAppointmentsMenu").addClass("active");
+    });
+</script>

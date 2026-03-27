@@ -1,0 +1,96 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Prescription.PrescriptionViewModel
+
+@{
+    ViewData["Title"] = "Prescription";
+    Layout = null;
+}
+
+<div id="doc2" style="font-family: 'Poppins', sans-serif; margin: 40px auto; max-width: 900px; border-radius: 8px; padding: 30px;">
+    <div class="header" style="text-align: center; font-size: 22px;">
+        <h2 style="font-weight:bold; color: #3498db; border-bottom: 2px solid #3498db; padding-bottom: 15px;">HOSPITAL MANAGEMENT SYSTEM</h2>
+        <h4 style="margin: 5px 0; text-align: left;">Address: Mindspace, Hyderabad</h4>
+        <h4 style="margin: 5px 0; text-align: left;">Contact: 879087XXXX</h4>
+        <h4 style="margin: 5px 0; text-align: left;">Date: @(Model.PrescriptionAddDate.ToShortDateString())</h4>
+    </div>
+    <br />
+    <div class="content" style="font-size: 22px;">
+        <div class="profile-info">
+            <div class="section-title" style="font-weight:bold; color: #3498db; margin-bottom: 10px;">DOCTOR PROFILE</div>
+            <div class="detail" style="margin-bottom: 8px;"><strong>Name:</strong> @Model.DoctorName</div>
+            <div class="detail" style="margin-bottom: 8px;"><strong>Specialization:</strong> @Model.DoctorSpecialization</div>
+        </div>
+        <br />
+        <div class="profile-info">
+            <div class="section-title" style="font-weight:bold; color: #3498db; margin-bottom: 10px;">PATIENT PROFILE</div>
+            <div class="detail" style="margin-bottom: 8px;"><strong>Name:</strong> @Model.PatientName</div>
+            @if (Model.PatientAge != null)
+            {
+                <div class="detail" style="margin-bottom: 8px;"><strong>Age:</strong> @Model.PatientAge</div>
+            }
+            @if (Model.PatientGender != null)
+            {
+                <div class="detail" style="margin-bottom: 8px;"><strong>Gender:</strong> @Model.PatientGender</div>
+            }
+            @if (Model.PatientEmailAddress != null)
+            {
+                <div class="detail" style="margin-bottom: 8px;"><strong>Email:</strong> @Model.PatientEmailAddress</div>
+            }
+            @if (Model.PatientPhoneNo != null)
+            {
+                <div class="detail" style="margin-bottom: 8px;"><strong>Phone No:</strong> @Model.PatientPhoneNo</div>
+            }
+        </div>
+        <br />
+        <div class="medical-tests">
+            <div class="section-title" style="font-weight:bold; color: #3498db; margin-bottom: 10px;">MEDICAL TESTS</div>
+            @if (!string.IsNullOrEmpty(Model.MedicalTest1))
+            {
+                <div class="detail" style="margin-bottom: 8px;">@Model.MedicalTest1</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.MedicalTest2))
+            {
+                <div class="detail" style="margin-bottom: 8px;">@Model.MedicalTest2</div>
+            }
+        </div>
+        <br />
+        <div class="prescription-info">
+            <div class="section-title" style="font-weight:bold; color: #3498db; margin-bottom: 10px;">PRESCRIPTION</div>
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="padding: 8px; border: 1px solid #ddd;">S.No.</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Medicine Name</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Morning</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Afternoon</th>
+                        <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Evening</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 1; i <= 4; i++)
+                    {
+                        var medicine = (string)Model.GetType().GetProperty($"Medicine{i}")?.GetValue(Model);
+                        var morning = (bool?)Model.GetType().GetProperty($"Morning{i}")?.GetValue(Model) ?? false;
+                        var afternoon = (bool?)Model.GetType().GetProperty($"Afternoon{i}")?.GetValue(Model) ?? false;
+                        var evening = (bool?)Model.GetType().GetProperty($"Evening{i}")?.GetValue(Model) ?? false;
+
+                        if (!string.IsNullOrEmpty(medicine))
+                        {
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">@i</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">@medicine</td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">@(morning ? "✔" : "-")</td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">@(afternoon ? "✔" : "-")</td>
+                                <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">@(evening ? "✔" : "-")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <br />
+        <div class="profile-info">
+            <div class="detail" style="margin-bottom: 8px;"><strong>Check Up After:</strong> @(Model.CheckUpAfterDays + " Days")</div>
+        </div>
+    </div>
+</div>

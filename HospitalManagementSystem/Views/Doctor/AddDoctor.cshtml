@@ -1,0 +1,491 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Doctor.AddDoctorViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Create/Edit Record";
+    var clientName = @Configuration["Client"] as string;
+    if (clientName == "DTStg") clientName = "UgPass";
+}
+
+<style>
+
+    /* Style adjustments for labels and inputs */
+    .col-form-label {
+        padding-top: 0; /* Reduced top padding */
+        padding-bottom: 0; /* Reduced bottom padding */
+        margin-bottom: 0; /* Remove default bottom margin */
+        line-height: 2; /* Adjust line height for better alignment */
+    }
+
+    .form-control,
+    .form-select {
+        height: 35px;
+        border-radius: 8px;
+    }
+
+    /* Style for required field indicators */
+    .required-field::after {
+        content: " *";
+        color: black;
+    }
+
+    .col-form-label {
+        /* color: black; */
+    }
+
+
+
+    .form-control {
+        /* border-color: black; */
+        border-radius: 2px;
+        border: 1px solid #ccc;
+    }
+
+    .form-select {
+        border-radius: 2px;
+    }
+
+
+
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-button {
+        margin: 5px;
+    }
+
+    .center-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+
+    .loader1 {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+
+    .inner-div {
+        border-radius: 15px;
+        margin: auto;
+        padding: 2%;
+        width: 150px;
+    }
+
+    .loadertext {
+        width: 100%;
+        max-width: 250px;
+        padding-top: 30px;
+        position: absolute;
+        top: 54%;
+        left: 45%;
+        transform: translate(-50%, -50%);
+        color: white;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    @@media screen and (max-width: 600px) {
+        .loadertext {
+            font-size: 14px;
+            max-width: 80%;
+            white-space: normal;
+        }
+    }
+
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+@{
+    await Html.RenderPartialAsync("_AlertBox");
+}
+
+<!-- Breadcrumb Section -->
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Doctor</></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Doctor</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="spinner" style="display:none">
+    <div class="center-div">
+        <div class="inner-div">
+            <div class="loader1"></div>
+        </div>
+    </div>
+    <div class="loadertext" id="loadingText">Please wait.. Fetching @ViewBag.cleintName subscriber profile details.</div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 style="padding-bottom:15px;">Add Doctor</h2>
+
+                <form id="doctorForm">
+                    <div class="container1">
+                        <div class="row">
+                            <!-- User ID Type Dropdown -->
+                            <div class="col-12 col-md-2 mb-2">
+                                <label for="UserIdType" class="form-label">User ID Type:</label>
+                                <select id="UserIdType" name="UserIdType" class="form-select form-select-sm" style="width: 100%;border-color:#ccc;background-color:#fdfdff;padding-left:10px;">
+                                    <option value="EMAIL">Email</option>
+                                    <option value="PHONE_NUMBER">Phone Number</option>
+                                    <option value="DOCTYPE">Card Number</option>
+                                </select>
+                            </div>
+
+                            <!-- User ID Input -->
+                            <div class="col-12 col-md-4 mb-2">
+                                <label for="UserId" class="form-label">User ID:</label>
+                                <input type="text" id="UserId" name="UserId" class="form-control form-control-sm" placeholder="Enter Email" required />
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12 col-md-3 mb-2 d-flex align-items-end" style="padding-bottom:1px;">
+                                <button type="button" id="searchBtn" class="btn btn-sm" style="background-color:#30a5ff;color:white;">
+                                    Search in @clientName
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr />
+
+                <form class="row" asp-action="AddDoctor" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <label asp-for="Name" class="col-sm-4 col-form-label required-field" style="font-weight: bold;"></label>
+                            <div class="col-sm-8">
+                                <input asp-for="Name" class="form-control" required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="Email" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Email</label>
+                            <div class="col-sm-8">
+                                <input asp-for="Email" type="email" class="form-control" required />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label asp-for="Country" class="col-sm-4 col-form-label required-field" style="font-weight: bold;"></label>
+                            <div class="col-sm-8">
+                                <input asp-for="Country" type="text" class="form-control" required />
+                                <span asp-validation-for="Country" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="MobileNumber" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Mobile Number</label>
+                            <div class="col-sm-8">
+                                <input asp-for="MobileNumber" type="tel" class="form-control" required />
+                                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="Gender" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Gender</label>
+                            <div class="col-sm-8">
+                                <select asp-for="Gender" class="form-select" required style="width: 100%;border-color:#ccc;background-color:#fdfdff;padding-left:10px;">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="DateOfBirth" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Date of Birth</label>
+                            <div class="col-sm-8">
+                                <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="BloodGroup" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Blood Group</label>
+                            <div class="col-sm-8">
+                                <select asp-for="BloodGroup" class="form-select" required style="width: 100%;border-color:#ccc;background-color:#fdfdff;padding-left:10px;">
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                                <span asp-validation-for="BloodGroup" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="Designation" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Designation</label>
+                            <div class="col-sm-8">
+                                <input asp-for="Designation" type="text" class="form-control" required />
+                                <span asp-validation-for="Designation" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row  mb-3">
+                            <label asp-for="Specilization" class="col-sm-4 col-form-label required-field" style="font-weight: bold;">Specialization</label>
+                            <div class="col-sm-8">
+                                <input asp-for="Specilization" type="text" class="form-control" required />
+                                <span asp-validation-for="Specilization" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Column -->
+                    <div class="col-md-6">
+                        <img id="doctorImage" src="" class="img-fluid" style=" width:180px; height:250px; float:left;margin-left:20px; margin-top:50px;display:none;" />
+                    </div>
+
+                    <div class="col-md-12" style="padding-top:29px;">
+                        <button type="submit" class="btn" style="background-color:#30a5ff;color:white">Save</button>
+                        <a asp-action="AddDoctor" class="btn" style="background-color:lightgray;color:black">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+@section Scripts {
+    <script>
+        document.getElementById('UserIdType').addEventListener('change', function () {
+            var userIdInput = document.getElementById('UserId');
+            userIdInput.value = ''; // Clear input
+
+            // Set placeholder dynamically based on selection
+            switch (this.value) {
+                case 'EMAIL':
+                    userIdInput.placeholder = 'Enter Email';
+                    break;
+                case 'PHONE_NUMBER':
+                    userIdInput.placeholder = 'Enter Phone Number';
+                    break;
+                case 'DOCTYPE':
+                    userIdInput.placeholder = 'Enter Card Number';
+                    break;
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initially, ensure the image is not displayed and hidden
+            $("#doctorImage").attr("src", "");
+            $("#doctorImage").hide();
+
+            // $(".DoctorMenu").addClass("active");
+            $(".DoctorMenu").click();
+            $(".AddDoctorMenu").addClass("active");
+        });
+
+        $(document).ajaxSend(function (event, xhr, options) {
+
+            $('.spinner').css('display', 'block');
+            document.getElementById("loadingText").style.display = "block";
+
+        }).ajaxComplete(function (event, xhr, options) {
+
+            $('.spinner').css('display', 'none');
+            document.getElementById("loadingText").style.display = "none";
+
+        }).ajaxError(function (event, jqxhr, settings, exception) {
+
+            $('.spinner').css('display', 'none');
+            document.getElementById("loadingText").style.display = "none";
+
+        });
+
+        $("#searchBtn").click(function () {
+            var clientName = "@ViewBag.ClientName";
+            $("#loadingText").text("Please wait... Fetching " + clientName + " profile details");
+
+
+            var formData = {
+                UserIdType: $("#UserIdType").val(),
+                UserId: $("#UserId").val()
+            };
+
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                url: '@Url.Action("GetProfile", "Doctor")',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response && response.status === "Success" && response.result) {
+                        let doctor = response.result;
+
+                        $("#Name").val(doctor.name);
+                        $("#Email").val(doctor.email);
+                        $("#Country").val(doctor.country);
+                        $("#MobileNumber").val(doctor.phone_number);
+                        $("#Gender").val(doctor.gender);
+
+                        // Date of Birth handling (string to date)
+                        if (doctor.birthdate) {
+                            var dateOfBirth = doctor.birthdate;
+
+                            var today = new Date(dateOfBirth);
+                            const yyyy = today.getFullYear();
+                            let mm = today.getMonth() + 1; // Months start at 0!
+                            let dd = today.getDate();
+
+                            if (dd < 10) dd = '0' + dd;
+                            if (mm < 10) mm = '0' + mm;
+
+                            var formattedToday = yyyy + '-' + mm + '-' + dd;
+                            //date format change end
+                            $('#DateOfBirth').val(formattedToday);
+                        } else {
+                            $("#DateOfBirth").val("");  // Clear the field if no date is returned
+                        }
+
+                        // Set Gender
+                        //$("#Gender").val(doctor.gender === "MALE" ? "Male" : "Female");
+                        // if (doctor.gender === "MALE") {
+                        //     $("#Gender").val("Male");
+                        // } else if (doctor.gender === "FEMALE") {
+                        //     $("#Gender").val("Female");
+                        // } else {
+                        //     $("#Gender").val(""); // Default or handle other cases
+                        // }
+
+                        // Set the image (only if available)
+                        if (doctor.photo) {
+                            $("#doctorImage").attr("src", "data:image/png;base64," + doctor.photo);
+                            $("#doctorImage").show();
+                        } else {
+                            $("#doctorImage").attr("src", ""); // Clear the source if no image
+                            $("#doctorImage").hide();
+                        }
+
+
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: "Error: " + xhr.responseText,
+                    });
+                },
+                complete: function () {
+                    $('.spinner').css('display', 'none');
+                }
+            });
+        });
+        $("#saveBtn").click(function (e) {
+            $("#loadingText").text("Please wait... Creating user details...");
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $("#saveForm").serialize(); // Serialize the form data
+
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                url: '@Url.Action("Save", "Doctor")', // URL to your Save action
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message
+                        }).then(() => {
+                            window.location.href = '@Url.Action("ListOfDoctors", "Doctor")'; // Redirect after successful save
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while saving.',
+                    });
+                },
+                complete: function () {
+                    $('.spinner').css('display', 'none');
+                }
+            });
+        });
+
+    </script>
+}

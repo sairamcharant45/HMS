@@ -1,0 +1,95 @@
+﻿body {
+    padding-top: 50px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    /*background-color: #2c3e50;*/
+    padding-top: 20px;
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .sidebar ul li {
+            padding: 10px;
+            text-align: left;
+            padding-right:10px;
+        }
+
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 14px;
+                background-color: #30a5ff;
+            }
+
+                .sidebar ul li a:hover {
+                    background-color: #30a5ff;
+                }
+
+    .sidebar .collapsible {
+        background: none;
+        border: none;
+        color: white;
+        text-align: left;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .sidebar .content {
+        display: none;
+        padding-left: 20px;
+    }
+
+.profile-sidebar {
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecf2;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 9999px;
+    margin-right: 5px;
+}
+
+.profile-userpic img {
+    float: left;
+    margin: 10px 0px 0px 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 9999px !important;
+}
+
+.profile-usertitle {
+    float: left;
+    text-align: left;
+    margin: 10px 0 0 12px;
+}
+
+.profile-usertitle-name {
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+.profile-usertitle-status {
+    text-transform: uppercase;
+    color: #AAA;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.divider, .clear {
+    clear: both;
+}

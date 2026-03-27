@@ -1,0 +1,356 @@
+﻿@model HospitalManagementSystem.Web.ViewModel.Prescription.EditPrescriptionViewModel
+
+@{
+    ViewData["Title"] = "Edit Prescription";
+}
+
+<style>
+
+    /* Style adjustments for labels and inputs */
+    .col-form-label {
+        padding-top: 0; /* Reduced top padding */
+        padding-bottom: 0; /* Reduced bottom padding */
+        margin-bottom: 0; /* Remove default bottom margin */
+        line-height: 2; /* Adjust line height for better alignment */
+    }
+
+    .form-control,
+    .form-select {
+        height: 30px;
+        border-radius: 8px;
+    }
+
+    /* Style for required field indicators */
+    .required-field::after {
+        content: " *";
+        color: black;
+    }
+
+    .col-form-label {
+        /* color: black; */
+    }
+
+
+
+    .form-control {
+        /* border-color: black; */
+        border-radius: 2px;
+    }
+
+    .form-select {
+        border-radius: 2px;
+    }
+
+    .row {
+        padding: 3px;
+    }
+
+    .card {
+        font-weight: bold;
+    }
+
+    .center-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+
+    .loader {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+
+    .inner-div {
+        border-radius: 15px;
+        margin: auto;
+        padding: 2%;
+        width: 150px;
+    }
+
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-button {
+        margin: 5px;
+    }
+
+    .loadertext {
+        width: 200px !important;
+        padding-top: 30px;
+        position: absolute;
+        top: 57%;
+        left: 43%;
+        transform: translate(-50%, -50%);
+        color: white;
+        white-space: nowrap;
+    }
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .col-form-label {
+        text-align: end;
+    }
+
+    @@media (max-width: 768px) {
+        .col-form-label {
+            text-align: start;
+        }
+    }
+
+    ::placeholder {
+        color: lightgrey !important;
+    }
+</style>
+
+<!-- Breadcrumb Section -->
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Prescription</li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Prescription</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 style="padding-bottom:15px;">Edit Prescription</h2>
+
+                <form asp-action="EditPrescription" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="@Model.Id" class="form-control" />
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medical Tests</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.MedicalTest1" class="form-control mb-2" placeholder="Test 1" />
+                            <input asp-for="@Model.MedicalTest2" class="form-control" placeholder="Test 2" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 1</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Medicine1" class="form-control mb-2" placeholder="Medicine 1" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Morning1" id="Morning1" value="true"
+                                @((bool)Model.Morning1 ? "checked" : "") />
+                                <label class="form-check-label" for="Morning1">Morning</label>
+                                <input type="hidden" name="Morning1" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Afternoon1" id="Afternoon1" value="true"
+                                @((bool)Model.Afternoon1 ? "checked" : "") />
+                                <label class="form-check-label" for="Afternoon1">Afternoon</label>
+                                <input type="hidden" name="Afternoon1" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Evening1" id="Evening1" value="true"
+                                @((bool)Model.Evening1 ? "checked" : "") />
+                                <label class="form-check-label" for="Evening1">Evening</label>
+                                <input type="hidden" name="Evening1" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 2</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Medicine2" class="form-control mb-2" placeholder="Medicine 2" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Morning2" id="Morning2" value="true"
+                                @((bool)Model.Morning2 ? "checked" : "") />
+                                <label class="form-check-label" for="Morning2">Morning</label>
+                                <input type="hidden" name="Morning2" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Afternoon2" id="Afternoon2" value="true"
+                                @((bool)Model.Afternoon2 ? "checked" : "") />
+                                <label class="form-check-label" for="Afternoon2">Afternoon</label>
+                                <input type="hidden" name="Afternoon2" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Evening2" id="Evening2" value="true"
+                                @((bool)Model.Evening2 ? "checked" : "") />
+                                <label class="form-check-label" for="Evening2">Evening</label>
+                                <input type="hidden" name="Evening2" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 3</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Medicine3" class="form-control mb-2" placeholder="Medicine 3" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Morning3" id="Morning3" value="true"
+                                @((bool)Model.Morning3 ? "checked" : "") />
+                                <label class="form-check-label" for="Morning3">Morning</label>
+                                <input type="hidden" name="Morning3" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Afternoon3" id="Afternoon3" value="true"
+                                @((bool)Model.Afternoon3 ? "checked" : "") />
+                                <label class="form-check-label" for="Afternoon3">Afternoon</label>
+                                <input type="hidden" name="Afternoon3" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Evening3" id="Evening3" value="true"
+                                @((bool)Model.Evening3 ? "checked" : "") />
+                                <label class="form-check-label" for="Evening3">Evening</label>
+                                <input type="hidden" name="Evening3" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <label class="col-sm-2 col-form-label fw-bold">Medicine 4</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Medicine4" class="form-control mb-2" placeholder="Medicine 4" />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Morning4" id="Morning4" value="true"
+                                @((bool)Model.Morning4 ? "checked" : "") />
+                                <label class="form-check-label" for="Morning4">Morning</label>
+                                <input type="hidden" name="Morning4" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Afternoon4" id="Afternoon4" value="true"
+                                @((bool)Model.Afternoon4 ? "checked" : "") />
+                                <label class="form-check-label" for="Afternoon4">Afternoon</label>
+                                <input type="hidden" name="Afternoon4" value="false" />
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="Evening4" id="Evening4" value="true"
+                                @((bool)Model.Evening4 ? "checked" : "") />
+                                <label class="form-check-label" for="Evening4">Evening</label>
+                                <input type="hidden" name="Evening4" value="false" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="@Model.CheckUpAfterDays" class="col-sm-2 col-form-label fw-bold">Checkup After Days</label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.CheckUpAfterDays" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="d-flex justify-content-end">                        
+                        <button type="submit" class="btn" style="background-color:#30a5ff;color:white; margin-right:10px;">Update</button>
+                        <a asp-action="ListOfPrescriptions" class="btn" style="background-color:lightgray;color:black">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".PrescrptionMenu").addClass("active");
+            $(".PrescrptionMenu").click();
+
+            // Checkbox enable/disable logic
+            function toggleTimeCheckboxes(medicineInput, checkboxes) {
+                const hasValue = medicineInput.val().trim() !== '';
+                checkboxes.prop('disabled', !hasValue);
+                if (!hasValue) checkboxes.prop('checked', false);
+            }
+
+            // Initialize medicine rows
+            function setupMedicine(num) {
+                const medicineInput = $(`#Medicine${num}`);
+                const checkboxes = $(`#Morning${num}, #Afternoon${num}, #Evening${num}`);
+
+                toggleTimeCheckboxes(medicineInput, checkboxes);
+                medicineInput.on('input', () => toggleTimeCheckboxes(medicineInput, checkboxes));
+            }
+
+            // Setup all 4 medicine rows
+            [1, 2, 3, 4].forEach(setupMedicine);
+
+            // Form validation
+            $('form').submit(function (e) {
+                const errors = [];
+
+                [1, 2, 3, 4].forEach(num => {
+                    const medicine = $(`#Medicine${num}`).val().trim();
+                    const hasTime = $(`#Morning${num}:checked, #Afternoon${num}:checked, #Evening${num}:checked`).length > 0;
+
+                    if (medicine && !hasTime) {
+                        errors.push(`• Medicine ${num}`);
+                    }
+                });
+
+                if (errors.length > 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Missing Time Selections',
+                        html: `Please select at least one time for:<br>${errors.join('<br>')}`,
+                        icon: 'error',
+                        confirmButtonColor: '#30a5ff'
+                    });
+                }
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,176 @@
+﻿@model List<HospitalManagementSystem.Web.ViewModel.Appointments.AppointmentListViewModel>
+
+@{
+    await Html.RenderPartialAsync("_AlertBox");
+}
+
+<!-- Breadcrumb Section -->
+<div class="row" style="padding:0px">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="DashBoard" asp-action="Index"><em class="fa fa-home"></em></a></li>
+                <li class="breadcrumb-item">Appointments</></li>
+                <li class="breadcrumb-item active" aria-current="page">List Of Appointments</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<style>
+    .table-no-border {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .table-no-border th, .table-no-border td {
+            border-bottom: 1px solid #ddd; /* Keeps only the horizontal lines */
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table-no-border th {
+            background-color: #f2f2f2;
+        }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <a href="@Url.Action("AddAppointment", "Appointments")" class="btn mb-3" style="background-color:#30a5ff; color:white">
+                    <i class="fas fa-plus"></i> Add Appointment
+                </a>
+                <h2 style="padding-bottom:15px;">List of Appointments</h2>
+
+                <div class="table-responsive" style="overflow-x: auto">
+                    <table class="table-no-border" id="Patient" style="width:100%;">
+                        <thead>
+                        <th>Id</th>
+                        <th>Patient Name</th>
+                        <th>Health Issue</th>
+                        <th>Appointment Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var patient in Model)
+                            {
+                                <tr>
+                                    <td>@patient.Id</td>
+                                    <td>@patient.Name</td>
+                                    <td>@patient.Problem</td>
+                                    <td>@patient.AppointmentDate</td>
+                                    <td>
+                                        @if (patient.Status == "APPROVED")
+                                        {
+                                            <span class="text-info">@patient.Status</span>
+                                        }
+                                        else if (patient.Status == "PENDING")
+                                        {
+                                            <span class="text-warning">@patient.Status</span>
+                                        }
+                                        else if (patient.Status == "COMPLETED")
+                                        {
+                                            <span class="text-success">@patient.Status</span>
+                                        }
+                                        else if(patient.Status=="REJECTED")
+                                        {
+                                            <span class="text-danger">@patient.Status</span> <!-- Fallback for unknown status -->
+                                        }
+                                    </td>
+
+
+
+                                    <td>
+                                        <a href="@Url.Action("ViewAppointmentDetails", new { id = patient.Id })" class="fas fa-eye" style="font-size: 19px; color: deepskyblue"></a> |
+                                        <a href="javascript:void(0);" onclick="confirmDelete('@Url.Action("DeleteAppointment",new { id = patient.Id })')" class="fa fa-trash" style="font-size: 19px; color: red"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert2 library -->
+    <script>
+
+        $(document).ready(function () {
+            $(".AppointmentsMenu").addClass("active");
+        });
+
+        function confirmDelete(deleteUrl) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to delete this Appointment?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: deleteUrl, // Use the passed deleteUrl
+                        beforeSend: function () {
+                            $('#overlay').show();
+                        },
+                        complete: function () {
+                            $('#overlay').hide();
+                        },
+                        success: function (result) {
+                            if (result) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'The Appointment has been deleted.',
+                                    'success'
+                                ).then(() => {
+                                    window.location.reload(); // Reload after confirmation
+                                });
+                            }else
+                            {
+                                Swal.fire(
+                                    'Error!',
+                                    'Something went wrong. Please try again.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'Something went wrong. Please try again.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#Patient').DataTable({
+                "paging": true,
+                "lengthMenu": [10, 20, 30],
+                "ordering": true,
+                "info": true,
+                "searching": true,
+                "responsive": true,
+                "autoWidth": false, // Ensures proper column width adjustment
+                "columnDefs": [
+                    {
+                        "targets": [0], // Target the first column (ID)
+                        "visible": false, // Hide the column
+                        "searchable": false // Prevent searching on this column
+                    }
+                ],
+                "order": [[0, "desc"]] //Sort by PatientID
+            });
+        });
+    </script>
+}
