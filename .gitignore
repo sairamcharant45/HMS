@@ -445,3 +445,4 @@ appsettings.json
 appsettings.*.json
 
 privatekey.pem
+*.pem
